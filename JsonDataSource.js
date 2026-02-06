@@ -20,13 +20,14 @@ class JsonDataSource extends FileDataSource {
   fetchAll(config = {}) {
     const filepath = this.resolvePath(config);
 
-    if (!this.hasData(config)) {
-      throw new Error(`Invalid path [${filepath}] for JsonDataSource`);
+    if (!fs.existsSync(filepath)) {
+      return Promise.resolve({});
     }
 
-    delete require.cache[filepath];
+    const contents = fs.readFileSync(fs.realpathSync(filepath)).toString('utf8');
+    const normalizedContents = contents.replace(/^\uFEFF/, '');
 
-    return Promise.resolve(require(filepath));
+    return Promise.resolve(JSON.parse(normalizedContents));
   }
 
 
