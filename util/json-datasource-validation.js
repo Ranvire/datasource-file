@@ -11,7 +11,12 @@ const source = new JsonDataSource({}, tempRoot);
 
 const run = async () => {
   const missingResult = await source.fetchAll({ path: 'missing.json' });
-  if (missingResult === null || typeof missingResult !== 'object' || Array.isArray(missingResult)) {
+  if (
+    missingResult === null ||
+    typeof missingResult !== 'object' ||
+    Array.isArray(missingResult) ||
+    Object.keys(missingResult).length !== 0
+  ) {
     throw new Error(`Expected missing file to return empty object, got: ${JSON.stringify(missingResult)}`);
   }
 
