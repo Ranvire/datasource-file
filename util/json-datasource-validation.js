@@ -10,32 +10,36 @@ const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'json-datasource-'));
 const source = new JsonDataSource({}, tempRoot);
 
 const run = async () => {
-  const missingResult = await source.fetchAll({ path: 'missing.json' });
-  if (
-    missingResult === null ||
-    typeof missingResult !== 'object' ||
-    Array.isArray(missingResult) ||
-    Object.keys(missingResult).length !== 0
-  ) {
-    throw new Error(`Expected missing file to return empty object, got: ${JSON.stringify(missingResult)}`);
-  }
-
-  const invalidPath = path.join(tempRoot, 'invalid.json');
-  fs.writeFileSync(invalidPath, '{ invalid json');
-
-  let invalidThrown = false;
   try {
-    await source.fetchAll({ path: 'invalid.json' });
-  } catch (error) {
-    invalidThrown = true;
-    console.log(`Invalid JSON threw as expected: ${error.message}`);
-  }
+    const missingResult = await source.fetchAll({ path: 'missing.json' });
+    if (
+      missingResult === null ||
+      typeof missingResult !== 'object' ||
+      Array.isArray(missingResult) ||
+      Object.keys(missingResult).length !== 0
+    ) {
+      throw new Error(`Expected missing file to return empty object, got: ${JSON.stringify(missingResult)}`);
+    }
 
-  if (!invalidThrown) {
-    throw new Error('Expected invalid JSON to throw.');
-  }
+    const invalidPath = path.join(tempRoot, 'invalid.json');
+    fs.writeFileSync(invalidPath, '{ invalid json');
 
-  console.log('JsonDataSource validation completed successfully.');
+    let invalidThrown = false;
+    try {
+      await source.fetchAll({ path: 'invalid.json' });
+    } catch (error) {
+      invalidThrown = true;
+      console.log(`Invalid JSON threw as expected: ${error.message}`);
+    }
+
+    if (!invalidThrown) {
+      throw new Error('Expected invalid JSON to throw.');
+    }
+
+    console.log('JsonDataSource validation completed successfully.');
+  } finally {
+    fs.rmSync(tempRoot, { recursive: true, force: true });
+  }
 };
 
 run().catch((error) => {
