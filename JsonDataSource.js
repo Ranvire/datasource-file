@@ -25,8 +25,9 @@ class JsonDataSource extends FileDataSource {
     }
 
     const contents = fs.readFileSync(fs.realpathSync(filepath)).toString('utf8');
+    const normalizedContents = contents.replace(/^\uFEFF/, '');
 
-    return Promise.resolve(JSON.parse(contents));
+    return Promise.resolve(JSON.parse(normalizedContents));
   }
 
 
