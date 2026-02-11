@@ -11,6 +11,15 @@ function runStep(label, command) {
 
 console.log('ci:local mirrors .github/workflows/ci.yml');
 
+// CI: Checkout (SKIPPED)
+// Not applicable for local runs; the repo is already present on disk.
+
+// CI: Setup Node
+const nodeMajor = Number.parseInt(process.versions.node.split('.')[0], 10);
+if (nodeMajor !== 22) {
+  throw new Error(`Expected Node.js 22.x, found ${process.versions.node}.`);
+}
+
 // CI: Install dependencies
 runStep('Install dependencies', 'npm ci --include=dev');
 
