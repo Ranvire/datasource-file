@@ -8,7 +8,7 @@ Supported Node.js: 22 LTS.
 
 * Node.js 22 LTS (see `engines` in `package.json`).
 * CommonJS only; use `require(...)`.
-* Imports: `const { YamlDataSource } = require('ranvier-datasource-file');`
+* Imports: `const { YamlDataSource } = require('./path/to/datasource-file');` (adjust to your project layout).
 
 ## DataSources
 
