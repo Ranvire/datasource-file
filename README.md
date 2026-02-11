@@ -23,6 +23,16 @@ Supported Node.js: 22 LTS.
   * Entity Config: `{ path: string: path to .yml file from project root }`
   * Config: `{ path: string: absolute path to directory containing .json files}`
 
+### Synchronous I/O and Error Semantics
+
+All datasources perform synchronous filesystem reads (and writes) even though their public methods return Promises.
+
+* **JsonDataSource**: `fetchAll` returns `{}` when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
+* **YamlDataSource**: `fetchAll` throws when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
+* **JsonDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `fetchAll` expects the directory to exist and reads each `.json` file synchronously.
+* **YamlDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `fetchAll` expects the directory to exist and reads each `.yml` file synchronously.
+* **YamlAreaDataSource**: `fetch`/`update` throw when the base directory is missing; `fetchAll` reads subdirectories that contain a `manifest.yml`.
+
 ### Registration in ranvier.json
 
 ```js
