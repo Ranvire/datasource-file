@@ -2,6 +2,9 @@
   "name": "ranvier-datasource-file",
   "description": "DataSources for the Ranvier game engine for file-based storage",
   "main": "index.js",
+  "scripts": {
+    "ci:local": "node util/ci-local.js"
+  },
   "dependencies": {
     "js-yaml": "^3.12.0"
   },
