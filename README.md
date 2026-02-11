@@ -35,9 +35,9 @@ All datasources perform synchronous filesystem reads (and writes) even though th
 
 * **JsonDataSource**: `fetchAll` returns `{}` when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
 * **YamlDataSource**: `fetchAll` throws when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
-* **JsonDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `fetchAll` expects the directory to exist and reads each `.json` file synchronously.
-* **YamlDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `fetchAll` expects the directory to exist and reads each `.yml` file synchronously.
-* **YamlAreaDataSource**: `fetch`/`update` throw when the base directory is missing; `fetchAll` reads subdirectories that contain a `manifest.yml`.
+* **JsonDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `update` overwrites the per-entity `<id>.json` file; `fetchAll` expects the directory to exist and reads each `.json` file synchronously.
+* **YamlDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `update` overwrites the per-entity `<id>.yml` file; `fetchAll` expects the directory to exist and reads each `.yml` file synchronously.
+* **YamlAreaDataSource**: `fetch`/`update` throw when the base directory is missing; `update` overwrites `<area>/manifest.yml`; `fetchAll` reads subdirectories that contain a `manifest.yml`.
 
 ### Path Tokens and Errors
 
