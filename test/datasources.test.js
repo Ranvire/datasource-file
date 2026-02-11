@@ -27,6 +27,16 @@ function writeYaml(filePath, data) {
   fs.writeFileSync(filePath, yaml.dump(data));
 }
 
+function makeLargeObject(entryCount) {
+  const data = {};
+  for (let i = 0; i < entryCount; i += 1) {
+    data[`id${i}`] = {
+      value: 'x'.repeat(100),
+    };
+  }
+  return data;
+}
+
 test('JsonDataSource reads and updates JSON files', async (t) => {
   const root = makeTempDir();
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
@@ -170,4 +180,64 @@ test('YamlAreaDataSource throws when directory is missing', async (t) => {
     () => source.fetch({ path: 'missing' }, 'area-one'),
     /Invalid path/,
   );
+});
+
+test('JsonDataSource handles large files on read/update', async (t) => {
+  const root = makeTempDir();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  const largeData = makeLargeObject(500);
+  writeJson(path.join(root, 'large.json'), largeData);
+
+  const source = new JsonDataSource({}, root);
+  const data = await source.fetchAll({ path: 'large.json' });
+  assert.strictEqual(Object.keys(data).length, 500);
+
+  await source.update({ path: 'large.json' }, 'id500', { value: 'added' });
+  const updated = await source.fetchAll({ path: 'large.json' });
+  assert.strictEqual(Object.keys(updated).length, 501);
+  assert.deepStrictEqual(updated.id500, { value: 'added' });
+});
+
+test('YamlDataSource handles large files on read/update', async (t) => {
+  const root = makeTempDir();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  const largeData = makeLargeObject(300);
+  writeYaml(path.join(root, 'large.yml'), largeData);
+
+  const source = new YamlDataSource({}, root);
+  const data = await source.fetchAll({ path: 'large.yml' });
+  assert.strictEqual(Object.keys(data).length, 300);
+
+  await source.update({ path: 'large.yml' }, 'id300', { value: 'added' });
+  const updated = await source.fetchAll({ path: 'large.yml' });
+  assert.strictEqual(Object.keys(updated).length, 301);
+  assert.deepStrictEqual(updated.id300, { value: 'added' });
+});
+
+test('JsonDirectoryDataSource ignores nested directories', async (t) => {
+  const root = makeTempDir();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  const dirPath = path.join(root, 'jsondir');
+  writeJson(path.join(dirPath, 'a.json'), { name: 'alpha' });
+  writeJson(path.join(dirPath, 'nested', 'b.json'), { name: 'beta' });
+
+  const source = new JsonDirectoryDataSource({}, root);
+  const data = await source.fetchAll({ path: 'jsondir' });
+  assert.deepStrictEqual(data, { a: { name: 'alpha' } });
+});
+
+test('YamlDirectoryDataSource ignores nested directories', async (t) => {
+  const root = makeTempDir();
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+
+  const dirPath = path.join(root, 'yamldir');
+  writeYaml(path.join(dirPath, 'a.yml'), { name: 'alpha' });
+  writeYaml(path.join(dirPath, 'nested', 'b.yml'), { name: 'beta' });
+
+  const source = new YamlDirectoryDataSource({}, root);
+  const data = await source.fetchAll({ path: 'yamldir' });
+  assert.deepStrictEqual(data, { a: { name: 'alpha' } });
 });
