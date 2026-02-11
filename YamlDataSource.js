@@ -13,11 +13,25 @@ const FileDataSource = require('./FileDataSource');
  */
 class YamlDataSource extends FileDataSource {
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {Promise<boolean>}
+   */
   hasData(config = {}) {
     const filepath = this.resolvePath(config);
     return Promise.resolve(fs.existsSync(filepath));
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {Promise<object>}
+   */
   fetchAll(config = {}) {
     const filepath = this.resolvePath(config);
 
@@ -34,6 +48,14 @@ class YamlDataSource extends FileDataSource {
   }
 
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {string} id
+   * @returns {Promise<*>}
+   */
   async fetch(config = {}, id) {
     const data = await this.fetchAll(config);
 
@@ -44,6 +66,14 @@ class YamlDataSource extends FileDataSource {
     return data[id];
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {*} data
+   * @returns {Promise<void>}
+   */
   replace(config = {}, data) {
     const filepath = this.resolvePath(config);
     return new Promise((resolve, reject) => {
@@ -57,6 +87,15 @@ class YamlDataSource extends FileDataSource {
     })
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {string} id
+   * @param {*} data
+   * @returns {Promise<void>}
+   */
   async update(config = {}, id, data) {
     const currentData = await this.fetchAll(config);
 

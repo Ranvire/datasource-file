@@ -9,10 +9,13 @@ class FileDataSource {
   }
 
   /**
-   * Parse [AREA] and [BUNDLE] template in the path
-   * @param {string} path
-   * @return {string}
-   * @throws Error
+   * Parse [AREA] and [BUNDLE] tokens in the configured path.
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {string}
+   * @throws {Error}
    */
   resolvePath(config) {
     const { path, bundle, area } = config;
