@@ -4,6 +4,21 @@ This changelog records user-visible, compatibility, and maintenance changes for 
 
 ## Unreleased
 
+### Prettier formatting
+
+- Summary:
+  - Add Prettier with `format` and `format:check` scripts.
+- Why:
+  - Provide a consistent autoformatting tool for maintenance work.
+- Impact:
+  - Tooling only; no runtime behavior changes.
+- Migration/Action:
+  - None.
+- References:
+  - None.
+- Timestamp:
+  - 2026.02.11 11:47
+
 ### ESLint linting
 
 - Summary:
