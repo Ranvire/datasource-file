@@ -4,6 +4,21 @@ This changelog records user-visible, compatibility, and maintenance changes for 
 
 ## Unreleased
 
+### CI parity adjustments
+
+- Summary:
+  - Mirror CI checkout/setup-node steps in `ci:local` and install dev dependencies with `npm ci --include=dev`.
+- Why:
+  - Keep local CI parity with GitHub Actions and enforce Node 22 expectations.
+- Impact:
+  - CI/local tooling only; no runtime behavior changes.
+- Migration/Action:
+  - None.
+- References:
+  - None.
+- Timestamp:
+  - 2026.02.11 12:58
+
 ### Package name (no rename)
 
 - Summary:
