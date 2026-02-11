@@ -72,7 +72,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 * [x] Maintain a lockfile for deterministic installs (`package-lock.json` exists).
 * [x] Add standard npm scripts (e.g., `test`) even if initially minimal.
 * [x] Add CI (GitHub Actions) to run tests/lint on push/PR.
-* [ ] Remove any language in documents, config files or code implying that this is an npm package (e.g. `npm pack`)
+* [x] Remove any language in documents, config files or code implying that this is an npm package (e.g. `npm pack`)
 
 ### Packaging & Exports
 
