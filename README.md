@@ -220,7 +220,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 
 * [x] Document that `update` rewrites full files (single-file datasources) and per-file overwrite behavior (directory datasources).
 * [x] Note that read paths are synchronous and may block the event loop under heavy use.
-* [ ] Add small tests to lock in read/update behavior for large files and nested directories.
+* [x] Add small tests to lock in read/update behavior for large files and nested directories.
 
 YAML and JSON DataSources for the Ranvier game engine
 
