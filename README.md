@@ -64,9 +64,7 @@ File-backed datasources for the Rantamuta MUD engine (a fork of RanvierMUD), pro
 
 The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `ranvier-datasource-file`: modernize runtime/tooling and tighten documentation and safeguards without redesigning the datasource architecture or changing the public API surface.
 
-### Modernization Checklists
-
-#### Runtime & Tooling
+### Runtime & Tooling
 
 * [ ] Declare supported Node.js versions in `package.json` (`engines`) and document them in the README.
 * [x] Maintain a lockfile for deterministic installs (`package-lock.json` exists).
@@ -74,24 +72,24 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 * [ ] Add CI (GitHub Actions) to run tests/lint on push/PR.
 * [ ] Remove any language in documents, config files or code implying that this is an npm package (e.g. `npm pack`)
 
-#### Packaging & Exports
+### Packaging & Exports
 
 * [x] Keep CommonJS entrypoint (`main: index.js`) aligned with the actual module format.
 * [ ] Confirm README examples use the current config keys (align `entitySources` vs `entityLoaders` if needed by this repo’s docs).
 
-#### Dependencies
+### Dependencies
 
 * [ ] Review `js-yaml` version for security/deprecation and upgrade within semver-safe bounds if possible.
 * [ ] Add `npm audit` (or equivalent) to CI and record results as artifacts.
 * [ ] Document dependency update policy (e.g., maintenance-only, security-first).
 
-#### Quality Gates
+### Quality Gates
 
 * [ ] Add a minimal test runner and baseline unit tests for each datasource (read, update, missing-file behavior).
 * [ ] Add linting (ESLint or similar) with a minimal ruleset.
 * [ ] Add formatting (Prettier or similar) and autoformat scripts.
 
-#### Documentation
+### Documentation
 
 * [ ] Expand README to document synchronous I/O behavior and error semantics for each datasource.
 * [ ] Document `FileDataSource.resolvePath` token rules (`[BUNDLE]`/`[AREA]`) and error messages.
@@ -99,14 +97,14 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 
 ### Minimal Improvements Checklist
 
-#### DX & Maintainability
+### DX & Maintainability
 
 * [ ] Add small helper utilities for repeated path validation and error formatting across datasources.
 * [ ] Reduce duplication between YAML/JSON directory datasources (shared base or helper functions).
 * [ ] Add JSDoc annotations for method inputs/outputs on each datasource class.
 * [ ] Add example config snippets in README for each datasource type.
 
-#### Performance Footguns
+### Performance Footguns
 
 * [ ] Document that `update` rewrites full files (single-file datasources) and per-file overwrite behavior (directory datasources).
 * [ ] Note that read paths are synchronous and may block the event loop under heavy use.
@@ -116,7 +114,7 @@ YAML and JSON DataSources for the Ranvier game engine
 
 ## Deferred tasks
 
-This is a set of proposed tasks that may or may not be completed in future. Deferred tasks
+This is a set of proposed tasks that may or may not be completed in future.
 
 * Make `hasData` checks consistent and awaited in `fetchAll` to avoid false positives in path validation.
 * Normalize missing-file behavior between YAML and JSON datasources (either both throw or both return empty).
