@@ -26,8 +26,8 @@ Supported Node.js: 22 LTS.
   * Entity Config: `{ path: string: path to .json file from project root }`
 * **JsonDirectoryDataSource**: For use with a directory containing a .json file for each entity
   * Base Config: none
-  * Entity Config: `{ path: string: path to .yml file from project root }`
-  * Config: `{ path: string: absolute path to directory containing .json files}`
+  * Entity Config: `{ path: string: path to .json file from project root }`
+  * Config: `{ path: string: path to directory containing .json files from project root }`
 
 ### Synchronous I/O and Error Semantics
 
