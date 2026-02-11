@@ -3,6 +3,7 @@
   "description": "DataSources for the Ranvier game engine for file-based storage",
   "main": "index.js",
   "scripts": {
+    "test": "node --test",
     "ci:local": "node util/ci-local.js"
   },
   "dependencies": {
