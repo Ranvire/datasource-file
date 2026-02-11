@@ -4,6 +4,21 @@ This changelog records user-visible, compatibility, and maintenance changes for 
 
 ## Unreleased
 
+### GitHub Actions CI
+
+- Summary:
+  - Add GitHub Actions CI to run `npm ci`, `npm test`, and `npm run lint` on push and pull request.
+- Why:
+  - Ensure automated verification for modernization changes.
+- Impact:
+  - No runtime behavior changes; adds CI checks for contributors.
+- Migration/Action:
+  - None.
+- References:
+  - None.
+- Timestamp:
+  - 2026.02.11 11:32
+
 ### Node.js 22 LTS
 
 - Summary:
