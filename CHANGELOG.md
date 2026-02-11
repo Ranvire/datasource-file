@@ -4,6 +4,21 @@ This changelog records user-visible, compatibility, and maintenance changes for 
 
 ## Unreleased
 
+### JsonDataSource missing-file behavior (deferred)
+
+- Summary:
+  - Keep `JsonDataSource.fetchAll` throwing on missing files; defer the empty-object behavior change.
+- Why:
+  - Avoid a behavior change in the 1.0 stabilization release.
+- Impact:
+  - No runtime behavior change relative to current behavior; missing files still throw.
+- Migration/Action:
+  - None.
+- References:
+  - None.
+- Timestamp:
+  - 2026.02.11 13:18
+
 ### CI parity adjustments
 
 - Summary:

@@ -52,13 +52,15 @@ test('JsonDataSource reads and updates JSON files', async (t) => {
   assert.deepStrictEqual(updated, { a: { name: 'alpha' }, b: { name: 'beta' } });
 });
 
-test('JsonDataSource returns empty object for missing file', async (t) => {
+test('JsonDataSource throws when the file is missing', (t) => {
   const root = makeTempDir();
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
 
   const source = new JsonDataSource({}, root);
-  const data = await source.fetchAll({ path: 'missing.json' });
-  assert.deepStrictEqual(data, {});
+  assert.throws(
+    () => source.fetchAll({ path: 'missing.json' }),
+    /Cannot find module/,
+  );
 });
 
 test('YamlDataSource reads and updates YAML files', async (t) => {

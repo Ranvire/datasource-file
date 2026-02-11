@@ -1,3 +1,3 @@
 ## JsonDataSource missing-file handling
 
-`JsonDataSource.fetchAll` now treats a missing JSON file as an empty result instead of throwing a stack trace. This is a bug fix so missing data behaves like “not found,” while invalid JSON still throws to surface real data corruption. 
+The previously proposed change to treat a missing JSON file as an empty result has been deferred for the 1.0 release. `JsonDataSource.fetchAll` continues to throw when the file is missing to avoid a behavior change. See `CHANGELOG.md` for the recorded decision.
