@@ -81,7 +81,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 
 ### Dependencies
 
-* [ ] Review `js-yaml` version for security/deprecation and upgrade within semver-safe bounds if possible.
+* [x] Review `js-yaml` version for security/deprecation and upgrade within semver-safe bounds if possible.
 * [ ] Add `npm audit` (or equivalent) to CI and record results as artifacts.
 * [ ] Document dependency update policy (e.g., maintenance-only, security-first).
 

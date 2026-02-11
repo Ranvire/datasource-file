@@ -4,6 +4,21 @@ This changelog records user-visible, compatibility, and maintenance changes for 
 
 ## Unreleased
 
+### js-yaml 3.14.2
+
+- Summary:
+  - Upgrade `js-yaml` to 3.14.2.
+- Why:
+  - Address the prototype pollution advisory fixed in 3.14.2.
+- Impact:
+  - Dependency update only; no runtime behavior changes expected.
+- Migration/Action:
+  - None.
+- References:
+  - GHSA-p8p7-x288-28g6.
+- Timestamp:
+  - 2026.02.11 11:35
+
 ### GitHub Actions CI
 
 - Summary:
