@@ -173,7 +173,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 ### Release Readiness Checklist
 
 * [x] Fix JsonDirectoryDataSource config docs (use `.json`, and clarify the path is project-root-relative, not absolute).
-* [ ] Reconcile compatibility section wording with “no npm package language” guidance (decide phrasing).
+* [x] Reconcile compatibility section wording with “no npm package language” guidance (decide phrasing).
 * [ ] Add a changelog entry for CI parity adjustments (`npm ci --include=dev`, ci:local checkout/setup-node mirroring).
 * [x] Decide on package naming for 1.0 (keep `ranvier-datasource-file` vs rename to a Rantamuta-prefixed name).
 * [x] Confirm release version number to publish (currently `1.0.3` in `package.json`).
