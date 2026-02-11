@@ -4,6 +4,12 @@ File-backed datasources for the Rantamuta MUD engine (a fork of RanvierMUD), pro
 
 Supported Node.js: 22 LTS.
 
+## Compatibility
+
+* Node.js 22 LTS (see `engines` in `package.json`).
+* CommonJS only; use `require(...)`.
+* Imports: `const { YamlDataSource } = require('ranvier-datasource-file');`
+
 ## DataSources
 
 * **YamlDataSource**: For use with all entities stored in one .yml file
