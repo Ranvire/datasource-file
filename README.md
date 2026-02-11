@@ -33,6 +33,17 @@ All datasources perform synchronous filesystem reads (and writes) even though th
 * **YamlDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `fetchAll` expects the directory to exist and reads each `.yml` file synchronously.
 * **YamlAreaDataSource**: `fetch`/`update` throw when the base directory is missing; `fetchAll` reads subdirectories that contain a `manifest.yml`.
 
+### Path Tokens and Errors
+
+`FileDataSource.resolvePath` joins the configured `path` to the datasource root and replaces `[BUNDLE]` and `[AREA]` tokens when present.
+
+It throws the following errors:
+
+* `No root configured for DataSource`
+* `No path for DataSource`
+* `No area configured for path with [AREA]`
+* `No bundle configured for path with [BUNDLE]`
+
 ### Registration in ranvier.json
 
 ```js
