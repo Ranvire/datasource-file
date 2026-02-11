@@ -50,6 +50,83 @@ It throws the following errors:
 * `No area configured for path with [AREA]`
 * `No bundle configured for path with [BUNDLE]`
 
+### Example Config Snippets
+
+**YamlDataSource**
+
+```js
+{
+  "entitySources": {
+    "items": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/items.yml"
+      }
+    }
+  }
+}
+```
+
+**YamlDirectoryDataSource**
+
+```js
+{
+  "entitySources": {
+    "npcs": {
+      "source": "YamlDirectory",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/npcs"
+      }
+    }
+  }
+}
+```
+
+**YamlAreaDataSource**
+
+```js
+{
+  "entitySources": {
+    "areas": {
+      "source": "YamlArea",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas"
+      }
+    }
+  }
+}
+```
+
+**JsonDataSource**
+
+```js
+{
+  "entitySources": {
+    "achievements": {
+      "source": "Json",
+      "config": {
+        "path": "data/achievements.json"
+      }
+    }
+  }
+}
+```
+
+**JsonDirectoryDataSource**
+
+```js
+{
+  "entitySources": {
+    "accounts": {
+      "source": "JsonDirectory",
+      "config": {
+        "path": "data/accounts"
+      }
+    }
+  }
+}
+```
+
 ### Registration in ranvier.json
 
 ```js
