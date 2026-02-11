@@ -214,7 +214,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 * [x] Add small helper utilities for repeated path validation and error formatting across datasources.
 * [x] Reduce duplication between YAML/JSON directory datasources (shared base or helper functions).
 * [x] Add JSDoc annotations for method inputs/outputs on each datasource class.
-* [ ] Add example config snippets in README for each datasource type.
+* [x] Add example config snippets in README for each datasource type.
 
 ### Performance Footguns
 
