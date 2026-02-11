@@ -7,6 +7,7 @@ Reference documents:
 - AGENTS.md (governance and constraints)
 - README.md (Rantamuta 1.0 Maintenance Checklist)
 - docs/ComplexityScale.md (task sizing rules)
+- docs/CHANGELOG_POLICY.md (changelog rules)
 
 Goal
 Advance the 1.0 maintenance checklist by addressing exactly ONE unchecked item, or by decomposing it if it is not atomic. No behavior changes unless required for Node 22+ modernization.
@@ -129,3 +130,4 @@ Phase 6 — Final report
 - Provide exact verification commands.
 - State the checklist item status update.
 - List any follow-up TODOs discovered (do not act on them).
+- Review docs/CHANGELOG_POLICY.md and add a CHANGELOG.md entry if warranted by the policy.
