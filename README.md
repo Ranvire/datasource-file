@@ -218,7 +218,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 
 ### Performance Footguns
 
-* [ ] Document that `update` rewrites full files (single-file datasources) and per-file overwrite behavior (directory datasources).
+* [x] Document that `update` rewrites full files (single-file datasources) and per-file overwrite behavior (directory datasources).
 * [ ] Note that read paths are synchronous and may block the event loop under heavy use.
 * [ ] Add small tests to lock in read/update behavior for large files and nested directories.
 
