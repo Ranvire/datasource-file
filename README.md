@@ -33,7 +33,7 @@ Supported Node.js: 22 LTS.
 
 All datasources perform synchronous filesystem reads (and writes) even though their public methods return Promises. Under heavy use, these synchronous reads can block the event loop.
 
-* **JsonDataSource**: `fetchAll` returns `{}` when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
+* **JsonDataSource**: `fetchAll` throws when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
 * **YamlDataSource**: `fetchAll` throws when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
 * **JsonDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `update` overwrites the per-entity `<id>.json` file; `fetchAll` expects the directory to exist and reads each `.json` file synchronously.
 * **YamlDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `update` overwrites the per-entity `<id>.yml` file; `fetchAll` expects the directory to exist and reads each `.yml` file synchronously.

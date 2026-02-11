@@ -12,47 +12,24 @@ const FileDataSource = require('./FileDataSource');
  */
 class JsonDataSource extends FileDataSource {
 
-  /**
-   * @param {object} config
-   * @param {string} config.path
-   * @param {string} [config.bundle]
-   * @param {string} [config.area]
-   * @returns {Promise<boolean>}
-   */
   hasData(config = {}) {
     const filepath = this.resolvePath(config);
     return Promise.resolve(fs.existsSync(filepath));
   }
 
-  /**
-   * @param {object} config
-   * @param {string} config.path
-   * @param {string} [config.bundle]
-   * @param {string} [config.area]
-   * @returns {Promise<object>}
-   */
   fetchAll(config = {}) {
     const filepath = this.resolvePath(config);
 
-    if (!fs.existsSync(filepath)) {
-      return Promise.resolve({});
+    if (!this.hasData(config)) {
+      throw new Error(`Invalid path [${filepath}] for JsonDataSource`);
     }
 
-    const contents = fs.readFileSync(fs.realpathSync(filepath)).toString('utf8');
-    const normalizedContents = contents.replace(/^\uFEFF/, '');
+    delete require.cache[filepath];
 
-    return Promise.resolve(JSON.parse(normalizedContents));
+    return Promise.resolve(require(filepath));
   }
 
 
-  /**
-   * @param {object} config
-   * @param {string} config.path
-   * @param {string} [config.bundle]
-   * @param {string} [config.area]
-   * @param {string} id
-   * @returns {Promise<*>}
-   */
   async fetch(config = {}, id) {
     const data = await this.fetchAll(config);
 
@@ -63,14 +40,6 @@ class JsonDataSource extends FileDataSource {
     return data[id];
   }
 
-  /**
-   * @param {object} config
-   * @param {string} config.path
-   * @param {string} [config.bundle]
-   * @param {string} [config.area]
-   * @param {*} data
-   * @returns {Promise<void>}
-   */
   replace(config = {}, data) {
     const filepath = this.resolvePath(config);
 
@@ -85,15 +54,6 @@ class JsonDataSource extends FileDataSource {
     })
   }
 
-  /**
-   * @param {object} config
-   * @param {string} config.path
-   * @param {string} [config.bundle]
-   * @param {string} [config.area]
-   * @param {string} id
-   * @param {*} data
-   * @returns {Promise<void>}
-   */
   async update(config = {}, id, data) {
     const currentData = await this.fetchAll(config);
 
