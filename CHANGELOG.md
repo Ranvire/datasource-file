@@ -4,6 +4,21 @@ This changelog records user-visible, compatibility, and maintenance changes for 
 
 ## Unreleased
 
+### Package name (no rename)
+
+- Summary:
+  - Keep the package name `ranvier-datasource-file` for the 1.0 release.
+- Why:
+  - Avoid a breaking rename and preserve compatibility for downstream consumers.
+- Impact:
+  - No runtime behavior changes; naming remains stable.
+- Migration/Action:
+  - None.
+- References:
+  - None.
+- Timestamp:
+  - 2026.02.11 12:52
+
 ### Prettier formatting
 
 - Summary:
