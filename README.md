@@ -121,7 +121,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 ### Documentation
 
 * [x] Expand README to document synchronous I/O behavior and error semantics for each datasource.
-* [ ] Document `FileDataSource.resolvePath` token rules (`[BUNDLE]`/`[AREA]`) and error messages.
+* [x] Document `FileDataSource.resolvePath` token rules (`[BUNDLE]`/`[AREA]`) and error messages.
 * [ ] Add a short “compatibility” section (Node version, CJS usage, how to import).
 
 ### Minimal Improvements Checklist
