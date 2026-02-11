@@ -94,7 +94,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 ### Quality Gates
 
 * [x] Add a minimal test runner and baseline unit tests for each datasource (read, update, missing-file behavior).
-* [ ] Add linting (ESLint or similar) with a minimal ruleset.
+* [x] Add linting (ESLint or similar) with a minimal ruleset.
 * [ ] Add formatting (Prettier or similar) and autoformat scripts.
 
 ### Documentation

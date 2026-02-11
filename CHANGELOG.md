@@ -4,6 +4,21 @@ This changelog records user-visible, compatibility, and maintenance changes for 
 
 ## Unreleased
 
+### ESLint linting
+
+- Summary:
+  - Add ESLint with a minimal ruleset and enable `npm run lint`.
+- Why:
+  - Establish a baseline linting gate for maintenance work.
+- Impact:
+  - Tooling only; no runtime behavior changes.
+- Migration/Action:
+  - None.
+- References:
+  - None.
+- Timestamp:
+  - 2026.02.11 11:44
+
 ### npm audit CI artifacts
 
 - Summary:
