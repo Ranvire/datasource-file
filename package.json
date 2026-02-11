@@ -6,6 +6,9 @@
     "test": "node --test",
     "ci:local": "node util/ci-local.js"
   },
+  "engines": {
+    "node": ">=22 <23"
+  },
   "dependencies": {
     "js-yaml": "^3.12.0"
   },

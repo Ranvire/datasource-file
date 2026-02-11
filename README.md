@@ -2,6 +2,8 @@
 
 File-backed datasources for the Rantamuta MUD engine (a fork of RanvierMUD), providing JSON and YAML loaders for single-file, per-entity directory, and area-manifest storage layouts. Includes path token resolution for `[BUNDLE]` and `[AREA]`, and is designed to be used as a drop-in datasource module without altering Rantamuta’s public API surface.
 
+Supported Node.js: 22 LTS.
+
 ## DataSources
 
 * **YamlDataSource**: For use with all entities stored in one .yml file
@@ -66,7 +68,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 
 ### Runtime & Tooling
 
-* [ ] Declare supported Node.js versions in `package.json` (`engines`) and document them in the README.
+* [x] Declare supported Node.js versions in `package.json` (`engines`) and document them in the README.
 * [x] Maintain a lockfile for deterministic installs (`package-lock.json` exists).
 * [ ] Add standard npm scripts (e.g., `test`) even if initially minimal.
 * [ ] Add CI (GitHub Actions) to run tests/lint on push/PR.
