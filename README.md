@@ -85,6 +85,12 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 * [x] Add `npm audit` (or equivalent) to CI and record results as artifacts.
 * [ ] Document dependency update policy (e.g., maintenance-only, security-first).
 
+#### Dependency Update Policy
+
+* Maintenance-only: avoid upgrades unless needed for security, Node.js compatibility, or tooling stability.
+* Security-first: prioritize fixes for known vulnerabilities.
+* Prefer patch/minor upgrades within a major version; avoid major bumps unless required.
+
 ### Quality Gates
 
 * [ ] Add a minimal test runner and baseline unit tests for each datasource (read, update, missing-file behavior).
