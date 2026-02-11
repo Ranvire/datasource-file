@@ -3,6 +3,8 @@
   "description": "DataSources for the Ranvier game engine for file-based storage",
   "main": "index.js",
   "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint .",
     "test": "node --test",
     "ci:local": "node util/ci-local.js"
@@ -26,6 +28,7 @@
   "homepage": "https://github.com/RanvierMUD/datasource-file#readme",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "eslint": "^9.39.2"
+    "eslint": "^9.39.2",
+    "prettier": "^3.8.1"
   }
 }
