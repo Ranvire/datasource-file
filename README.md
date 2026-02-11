@@ -77,7 +77,7 @@ The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `
 ### Packaging & Exports
 
 * [x] Keep CommonJS entrypoint (`main: index.js`) aligned with the actual module format.
-* [ ] Confirm README examples use the current config keys (align `entitySources` vs `entityLoaders` if needed by this repo’s docs).
+* [x] Confirm README examples use the current config keys (align `entitySources` vs `entityLoaders` if needed by this repo’s docs).
 
 ### Dependencies
 
