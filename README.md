@@ -31,7 +31,7 @@ Supported Node.js: 22 LTS.
 
 ### Synchronous I/O and Error Semantics
 
-All datasources perform synchronous filesystem reads (and writes) even though their public methods return Promises.
+All datasources perform synchronous filesystem reads (and writes) even though their public methods return Promises. Under heavy use, these synchronous reads can block the event loop.
 
 * **JsonDataSource**: `fetchAll` returns `{}` when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
 * **YamlDataSource**: `fetchAll` throws when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
