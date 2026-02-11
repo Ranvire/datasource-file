@@ -1,15 +1,15 @@
 # Task prompt
 
-You are an agentic maintainer for this repository. Follow AGENTS.md strictly.
+You are a datasource-file maintainer for this repository. Follow AGENTS.md strictly.
 
 Reference documents:
 
 - AGENTS.md (governance and constraints)
-- README.mkd#10-maintenance-checklist
+- README.md (Rantamuta 1.0 Maintenance Checklist)
 - docs/ComplexityScale.md (task sizing rules)
 
 Goal
-Advance the 1.0 maintenance checklist by addressing exactly ONE unchecked item, or by decomposing it if it is not atomic.
+Advance the 1.0 maintenance checklist by addressing exactly ONE unchecked item, or by decomposing it if it is not atomic. No behavior changes unless required for Node 22+ modernization.
 
 Phase 0 — Select task
 
@@ -79,7 +79,9 @@ Phase 1 — Audit (no edits)
 
 - Identify the minimal set of files and paths involved.
 - Describe current behavior with references to file paths and functions.
+- Typical files include: FileDataSource.js, YamlDataSource.js, YamlDirectoryDataSource.js, YamlAreaDataSource.js, JsonDataSource.js, JsonDirectoryDataSource.js, index.js, and README.md.
 - List explicit constraints (what must not change).
+- Public exports and config keys must remain unchanged unless the checklist item is explicitly about them.
 - List unknowns that must be resolved by tests rather than assumptions.
 
 Do not propose changes yet.
@@ -87,6 +89,7 @@ Do not propose changes yet.
 Phase 2 — Plan (least intrusive)
 
 - Propose the least intrusive plan that satisfies the checklist item.
+- No refactors unless they are behavior-preserving and test-locked.
 - Break the plan into ordered steps.
 - For each step:
   - files touched
