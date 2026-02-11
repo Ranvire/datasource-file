@@ -1,11 +1,11 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
 const yaml = require('js-yaml');
 
 const FileDataSource = require('./FileDataSource');
 const YamlDataSource = require('./YamlDataSource');
+const { fetchAllFromDirectory, fetchFromDirectory, updateInDirectory } = require('./util/directory-datasource');
 const { requireDirectory } = require('./util/datasource-path');
 
 /**
@@ -35,21 +35,11 @@ class YamlDirectoryDataSource extends FileDataSource {
       throw new Error(`Invalid path [${dirPath}] specified for YamlDirectoryDataSource`);
     }
 
-    return new Promise((resolve, reject) => {
-      const data = {};
-
-      fs.readdir(dirPath, async (err, files) => {
-        for (const file of files) {
-          if (path.extname(file) !== '.yml') {
-            continue;
-          }
-
-          const id = path.basename(file, '.yml');
-          data[id] = await this.fetch(config, id);
-        }
-
-        resolve(data);
-      });
+    return fetchAllFromDirectory({
+      dirPath,
+      extension: '.yml',
+      fetch: (id) => this.fetch(config, id),
+      useRealpath: false,
     });
   }
 
@@ -57,18 +47,25 @@ class YamlDirectoryDataSource extends FileDataSource {
     const dirPath = this.resolvePath(config);
     requireDirectory(dirPath, 'YamlDirectoryDataSource');
 
-    const source = new YamlDataSource({}, dirPath);
-
-    return source.fetchAll({ path: `${id}.yml` });
+    return fetchFromDirectory({
+      dirPath,
+      id,
+      extension: '.yml',
+      SourceClass: YamlDataSource,
+    });
   }
 
   async update(config = {}, id, data) {
     const dirPath = this.resolvePath(config);
     requireDirectory(dirPath, 'YamlDirectoryDataSource');
 
-    const source = new YamlDataSource({}, dirPath);
-
-    return await source.replace({ path: `${id}.yml` }, data);
+    return await updateInDirectory({
+      dirPath,
+      id,
+      data,
+      extension: '.yml',
+      SourceClass: YamlDataSource,
+    });
   }
 }
 
