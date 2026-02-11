@@ -1,13 +1,19 @@
 'use strict';
 
-/*
- * Local CI stub.
- *
- * Per AGENTS.md, this script is the local mirror of CI steps.
- * It should be kept step-for-step with .github/workflows/ci.yml, and each
- * step should be annotated with "// CI: <step name>". If a CI step cannot be
- * reproduced locally, mark it as skipped and explain why.
- *
- */
+const { execSync } = require('node:child_process');
 
-console.log('ci:local is a stub (no CI defined yet).');
+function runStep(label, command) {
+  console.log(`\n==> ${label}`);
+  execSync(command, { stdio: 'inherit' });
+}
+
+console.log('ci:local mirrors .github/workflows/ci.yml');
+
+// CI: Install dependencies
+runStep('Install dependencies', 'npm ci');
+
+// CI: Run tests
+runStep('Run tests', 'npm test');
+
+// CI: Run lint
+runStep('Run lint', 'npm run lint');
