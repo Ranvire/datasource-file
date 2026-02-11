@@ -1,68 +1,16 @@
-## Ranvire 1.0 Maintenance Checklist
+# Rantamuta datasource-file
 
-The Ranvire 1.0 release is intended to be a **pure maintenance upgrade** for `ranvier-datasource-file`: modernize runtime/tooling and tighten documentation and safeguards without redesigning the datasource architecture or changing the public API surface.
+File-backed datasources for the Rantamuta MUD engine (a fork of RanvierMUD), providing JSON and YAML loaders for single-file, per-entity directory, and area-manifest storage layouts. Includes path token resolution for `[BUNDLE]` and `[AREA]`, and is designed to be used as a drop-in datasource module without altering Rantamuta’s public API surface.
 
-### Modernization Checklists
+Supported Node.js: 22 LTS.
 
-#### Runtime & Tooling
+## Compatibility
 
-* [ ] Declare supported Node.js versions in `package.json` (`engines`) and document them in the README.
-* [x] Maintain a lockfile for deterministic installs (`package-lock.json` exists).
-* [ ] Add standard npm scripts (e.g., `test`, `lint`, `format`) even if initially minimal.
-* [ ] Add CI (GitHub Actions) to run tests/lint on push/PR.
-* [ ] Add a simple `npm pack`/publish smoke check in CI to validate the package ships cleanly.
+* Node.js 22 LTS (see `engines` in `package.json`).
+* CommonJS only; use `require(...)`.
+* Imports: `const { YamlDataSource } = require('./path/to/datasource-file');` (adjust to your project layout).
 
-#### Packaging & Exports
-
-* [x] Keep CommonJS entrypoint (`main: index.js`) aligned with the actual module format.
-* [ ] Add an `exports` field to document the public surface and lock down deep imports.
-* [ ] Add a `files` allowlist (or `.npmignore`) to control the published footprint.
-* [ ] Confirm README examples use the current config keys (align `entitySources` vs `entityLoaders` if needed by this repo’s docs).
-
-#### Dependencies
-
-* [ ] Review `js-yaml` version for security/deprecation and upgrade within semver-safe bounds if possible.
-* [ ] Add `npm audit` (or equivalent) to CI and record results as artifacts.
-* [ ] Document dependency update policy (e.g., maintenance-only, security-first).
-
-#### Quality Gates
-
-* [ ] Add a minimal test runner and baseline unit tests for each datasource (read, update, missing-file behavior).
-* [ ] Add linting (ESLint or similar) with a minimal ruleset.
-* [ ] Add formatting (Prettier or similar) and autoformat scripts.
-
-#### Documentation
-
-* [ ] Expand README to document synchronous I/O behavior and error semantics for each datasource.
-* [ ] Document `FileDataSource.resolvePath` token rules (`[BUNDLE]`/`[AREA]`) and error messages.
-* [ ] Add a short “compatibility” section (Node version, CJS usage, how to import).
-
-### Minimal Improvements Checklist
-
-#### Stability & Error Handling
-
-* [ ] Make `hasData` checks consistent and awaited in `fetchAll` to avoid false positives in path validation.
-* [ ] Normalize missing-file behavior between YAML and JSON datasources (either both throw or both return empty).
-* [ ] Include resolved paths in thrown errors consistently across datasources.
-* [ ] Handle `fs.readdir` errors explicitly in directory datasources (reject the promise with the error).
-* [ ] Consider BOM handling for YAML to match JSON’s BOM-stripping behavior.
-
-#### DX & Maintainability
-
-* [ ] Add small helper utilities for repeated path validation and error formatting across datasources.
-* [ ] Reduce duplication between YAML/JSON directory datasources (shared base or helper functions).
-* [ ] Add JSDoc annotations for method inputs/outputs on each datasource class.
-* [ ] Add example config snippets in README for each datasource type.
-
-#### Performance Footguns
-
-* [ ] Document that `update` rewrites full files (single-file datasources) and per-file overwrite behavior (directory datasources).
-* [ ] Note that read paths are synchronous and may block the event loop under heavy use.
-* [ ] Add small tests to lock in read/update behavior for large files and nested directories.
-
-YAML and JSON DataSources for the Ranvier game engine
-
-### DataSources
+## DataSources
 
 * **YamlDataSource**: For use with all entities stored in one .yml file
   * Base Config: none
@@ -78,10 +26,108 @@ YAML and JSON DataSources for the Ranvier game engine
   * Entity Config: `{ path: string: path to .json file from project root }`
 * **JsonDirectoryDataSource**: For use with a directory containing a .json file for each entity
   * Base Config: none
-  * Entity Config: `{ path: string: path to .yml file from project root }`
-  * Config: `{ path: string: absolute path to directory containing .json files}`
+  * Entity Config: `{ path: string: path to .json file from project root }`
+  * Config: `{ path: string: path to directory containing .json files from project root }`
 
-#### Registration in ranvier.json
+### Synchronous I/O and Error Semantics
+
+All datasources perform synchronous filesystem reads (and writes) even though their public methods return Promises. Under heavy use, these synchronous reads can block the event loop.
+
+* **JsonDataSource**: `fetchAll` returns `{}` when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
+* **YamlDataSource**: `fetchAll` throws when the file is missing; `fetch` throws a `ReferenceError` for missing ids; `update` rewrites the full file.
+* **JsonDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `update` overwrites the per-entity `<id>.json` file; `fetchAll` expects the directory to exist and reads each `.json` file synchronously.
+* **YamlDirectoryDataSource**: `fetch`/`update` throw when the directory is missing; `update` overwrites the per-entity `<id>.yml` file; `fetchAll` expects the directory to exist and reads each `.yml` file synchronously.
+* **YamlAreaDataSource**: `fetch`/`update` throw when the base directory is missing; `update` overwrites `<area>/manifest.yml`; `fetchAll` reads subdirectories that contain a `manifest.yml`.
+
+### Path Tokens and Errors
+
+`FileDataSource.resolvePath` joins the configured `path` to the datasource root and replaces `[BUNDLE]` and `[AREA]` tokens when present.
+
+It throws the following errors:
+
+* `No root configured for DataSource`
+* `No path for DataSource`
+* `No area configured for path with [AREA]`
+* `No bundle configured for path with [BUNDLE]`
+
+### Example Config Snippets
+
+**YamlDataSource**
+
+```js
+{
+  "entitySources": {
+    "items": {
+      "source": "Yaml",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/items.yml"
+      }
+    }
+  }
+}
+```
+
+**YamlDirectoryDataSource**
+
+```js
+{
+  "entitySources": {
+    "npcs": {
+      "source": "YamlDirectory",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas/[AREA]/npcs"
+      }
+    }
+  }
+}
+```
+
+**YamlAreaDataSource**
+
+```js
+{
+  "entitySources": {
+    "areas": {
+      "source": "YamlArea",
+      "config": {
+        "path": "bundles/[BUNDLE]/areas"
+      }
+    }
+  }
+}
+```
+
+**JsonDataSource**
+
+```js
+{
+  "entitySources": {
+    "achievements": {
+      "source": "Json",
+      "config": {
+        "path": "data/achievements.json"
+      }
+    }
+  }
+}
+```
+
+**JsonDirectoryDataSource**
+
+```js
+{
+  "entitySources": {
+    "accounts": {
+      "source": "JsonDirectory",
+      "config": {
+        "path": "data/accounts"
+      }
+    }
+  }
+}
+```
+
+### Registration in ranvier.json
 
 ```js
 {
@@ -120,5 +166,78 @@ YAML and JSON DataSources for the Ranvier game engine
 }
 ```
 
+## Rantamuta 1.0 Maintenance Checklist
 
+The Rantamuta 1.0 release is intended to be a **pure maintenance upgrade** for `ranvier-datasource-file`: modernize runtime/tooling and tighten documentation and safeguards without redesigning the datasource architecture or changing the public API surface.
 
+### Release Readiness Checklist
+
+* [x] Fix JsonDirectoryDataSource config docs (use `.json`, and clarify the path is project-root-relative, not absolute).
+* [x] Reconcile compatibility section wording with “no npm package language” guidance (decide phrasing).
+* [x] Add a changelog entry for CI parity adjustments (`npm ci --include=dev`, ci:local checkout/setup-node mirroring).
+* [x] Decide on package naming for 1.0 (keep `ranvier-datasource-file` vs rename to a Rantamuta-prefixed name).
+* [x] Confirm release version number to publish (currently `1.0.0` in `package.json`).
+
+### Runtime & Tooling
+
+* [x] Declare supported Node.js versions in `package.json` (`engines`) and document them in the README.
+* [x] Maintain a lockfile for deterministic installs (`package-lock.json` exists).
+* [x] Add standard npm scripts (e.g., `test`) even if initially minimal.
+* [x] Add CI (GitHub Actions) to run tests/lint on push/PR.
+* [x] Remove any language in documents, config files or code implying that this is an npm package (e.g. `npm pack`)
+
+### Packaging & Exports
+
+* [x] Keep CommonJS entrypoint (`main: index.js`) aligned with the actual module format.
+* [x] Confirm README examples use the current config keys (align `entitySources` vs `entityLoaders` if needed by this repo’s docs).
+
+### Dependencies
+
+* [x] Review `js-yaml` version for security/deprecation and upgrade within semver-safe bounds if possible.
+* [x] Add `npm audit` (or equivalent) to CI and record results as artifacts.
+* [x] Document dependency update policy (e.g., maintenance-only, security-first).
+
+#### Dependency Update Policy
+
+* Maintenance-only: avoid upgrades unless needed for security, Node.js compatibility, or tooling stability.
+* Security-first: prioritize fixes for known vulnerabilities.
+* Prefer patch/minor upgrades within a major version; avoid major bumps unless required.
+
+### Quality Gates
+
+* [x] Add a minimal test runner and baseline unit tests for each datasource (read, update, missing-file behavior).
+* [x] Add linting (ESLint or similar) with a minimal ruleset.
+* [x] Add formatting (Prettier or similar) and autoformat scripts.
+
+### Documentation
+
+* [x] Expand README to document synchronous I/O behavior and error semantics for each datasource.
+* [x] Document `FileDataSource.resolvePath` token rules (`[BUNDLE]`/`[AREA]`) and error messages.
+* [x] Add a short “compatibility” section (Node version, CJS usage, how to import).
+
+### Minimal Improvements Checklist
+
+### DX & Maintainability
+
+* [x] Add small helper utilities for repeated path validation and error formatting across datasources.
+* [x] Reduce duplication between YAML/JSON directory datasources (shared base or helper functions).
+* [x] Add JSDoc annotations for method inputs/outputs on each datasource class.
+* [x] Add example config snippets in README for each datasource type.
+
+### Performance Footguns
+
+* [x] Document that `update` rewrites full files (single-file datasources) and per-file overwrite behavior (directory datasources).
+* [x] Note that read paths are synchronous and may block the event loop under heavy use.
+* [x] Add small tests to lock in read/update behavior for large files and nested directories.
+
+YAML and JSON DataSources for the Ranvier game engine
+
+## Deferred tasks
+
+This is a set of proposed tasks that may or may not be completed in future.
+
+* Make `hasData` checks consistent and awaited in `fetchAll` to avoid false positives in path validation.
+* Normalize missing-file behavior between YAML and JSON datasources (either both throw or both return empty).
+* Include resolved paths in thrown errors consistently across datasources.
+* Handle `fs.readdir` errors explicitly in directory datasources (reject the promise with the error).
+* Consider BOM handling for YAML to match JSON’s BOM-stripping behavior.

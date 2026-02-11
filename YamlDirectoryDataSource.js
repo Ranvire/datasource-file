@@ -1,11 +1,12 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
 const yaml = require('js-yaml');
 
 const FileDataSource = require('./FileDataSource');
 const YamlDataSource = require('./YamlDataSource');
+const { fetchAllFromDirectory, fetchFromDirectory, updateInDirectory } = require('./util/directory-datasource');
+const { requireDirectory } = require('./util/datasource-path');
 
 /**
  * Data source when you have a directory of yaml files and each entity is stored in
@@ -22,11 +23,25 @@ const YamlDataSource = require('./YamlDataSource');
  */
 class YamlDirectoryDataSource extends FileDataSource {
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {Promise<boolean>}
+   */
   hasData(config = {}) {
     const filepath = this.resolvePath(config);
     return Promise.resolve(fs.existsSync(filepath));
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {Promise<object>}
+   */
   async fetchAll(config = {}) {
     const dirPath = this.resolvePath(config);
 
@@ -34,44 +49,54 @@ class YamlDirectoryDataSource extends FileDataSource {
       throw new Error(`Invalid path [${dirPath}] specified for YamlDirectoryDataSource`);
     }
 
-    return new Promise((resolve, reject) => {
-      const data = {};
-
-      fs.readdir(dirPath, async (err, files) => {
-        for (const file of files) {
-          if (path.extname(file) !== '.yml') {
-            continue;
-          }
-
-          const id = path.basename(file, '.yml');
-          data[id] = await this.fetch(config, id);
-        }
-
-        resolve(data);
-      });
+    return fetchAllFromDirectory({
+      dirPath,
+      extension: '.yml',
+      fetch: (id) => this.fetch(config, id),
+      useRealpath: false,
     });
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {string} id
+   * @returns {Promise<object>}
+   */
   async fetch(config = {}, id) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for YamlDirectoryDataSource`);
-    }
+    requireDirectory(dirPath, 'YamlDirectoryDataSource');
 
-    const source = new YamlDataSource({}, dirPath);
-
-    return source.fetchAll({ path: `${id}.yml` });
+    return fetchFromDirectory({
+      dirPath,
+      id,
+      extension: '.yml',
+      SourceClass: YamlDataSource,
+    });
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {string} id
+   * @param {*} data
+   * @returns {Promise<void>}
+   */
   async update(config = {}, id, data) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for YamlDirectoryDataSource`);
-    }
+    requireDirectory(dirPath, 'YamlDirectoryDataSource');
 
-    const source = new YamlDataSource({}, dirPath);
-
-    return await source.replace({ path: `${id}.yml` }, data);
+    return await updateInDirectory({
+      dirPath,
+      id,
+      data,
+      extension: '.yml',
+      SourceClass: YamlDataSource,
+    });
   }
 }
 

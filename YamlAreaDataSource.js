@@ -6,6 +6,7 @@ const yaml = require('js-yaml');
 
 const FileDataSource = require('./FileDataSource');
 const YamlDataSource = require('./YamlDataSource');
+const { requireDirectory } = require('./util/datasource-path');
 
 /**
  * Data source for areas stored in yml. Looks for a directory structure like:
@@ -21,11 +22,25 @@ const YamlDataSource = require('./YamlDataSource');
  *
  */
 class YamlAreaDataSource extends FileDataSource {
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {boolean}
+   */
   hasData(config = {}) {
     const dirPath = this.resolvePath(config);
     return fs.existsSync(dirPath);
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {Promise<object>}
+   */
   async fetchAll(config = {}) {
     const dirPath = this.resolvePath(config);
 
@@ -55,22 +70,35 @@ class YamlAreaDataSource extends FileDataSource {
     });
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {string} id
+   * @returns {Promise<object>}
+   */
   async fetch(config = {}, id) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for YamlAreaDataSource`);
-    }
+    requireDirectory(dirPath, 'YamlAreaDataSource');
 
     const source = new YamlDataSource({}, dirPath);
 
     return source.fetchAll({ path: `${id}/manifest.yml` });
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {string} id
+   * @param {*} data
+   * @returns {Promise<void>}
+   */
   async update(config = {}, id, data) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for YamlAreaDataSource`);
-    }
+    requireDirectory(dirPath, 'YamlAreaDataSource');
 
     const source = new YamlDataSource({}, dirPath);
 

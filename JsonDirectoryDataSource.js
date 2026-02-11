@@ -1,10 +1,11 @@
 'use strict';
 
 const fs = require('fs');
-const path = require('path');
 
 const FileDataSource = require('./FileDataSource');
 const JsonDataSource = require('./JsonDataSource');
+const { fetchAllFromDirectory, fetchFromDirectory, updateInDirectory } = require('./util/directory-datasource');
+const { requireDirectory } = require('./util/datasource-path');
 
 
 /**
@@ -23,11 +24,25 @@ const JsonDataSource = require('./JsonDataSource');
  */
 class JsonDirectoryDataSource extends FileDataSource {
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {Promise<boolean>}
+   */
   hasData(config = {}) {
     const filepath = this.resolvePath(config);
     return Promise.resolve(fs.existsSync(filepath));
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @returns {Promise<object>}
+   */
   fetchAll(config = {}) {
     const dirPath = this.resolvePath(config);
 
@@ -35,43 +50,53 @@ class JsonDirectoryDataSource extends FileDataSource {
       throw new Error(`Invalid path [${dirPath}] specified for JsonDirectoryDataSource`);
     }
 
-    return new Promise((resolve, reject) => {
-      const data = {};
-
-      fs.readdir(fs.realpathSync(dirPath), async (err, files) => {
-        for (const file of files) {
-          if (path.extname(file) !== '.json') {
-            continue;
-          }
-
-          const id = path.basename(file, '.json');
-          data[id] = await this.fetch(config, id);
-        }
-
-        resolve(data);
-      });
+    return fetchAllFromDirectory({
+      dirPath,
+      extension: '.json',
+      fetch: (id) => this.fetch(config, id),
+      useRealpath: true,
     });
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {string} id
+   * @returns {Promise<object>}
+   */
   fetch(config = {}, id) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for JsonDirectoryDataSource`);
-    }
+    requireDirectory(dirPath, 'JsonDirectoryDataSource');
 
-    const source = new JsonDataSource({}, dirPath);
-
-    return source.fetchAll({ path: `${id}.json` });
+    return fetchFromDirectory({
+      dirPath,
+      id,
+      extension: '.json',
+      SourceClass: JsonDataSource,
+    });
   }
 
+  /**
+   * @param {object} config
+   * @param {string} config.path
+   * @param {string} [config.bundle]
+   * @param {string} [config.area]
+   * @param {string} id
+   * @param {*} data
+   * @returns {Promise<void>}
+   */
   async update(config = {}, id, data) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for JsonDirectoryDataSource`);
-    }
-    const source = new JsonDataSource({}, dirPath);
-
-    return await source.replace({ path: `${id}.json` }, data);
+    requireDirectory(dirPath, 'JsonDirectoryDataSource');
+    return await updateInDirectory({
+      dirPath,
+      id,
+      data,
+      extension: '.json',
+      SourceClass: JsonDataSource,
+    });
   }
 }
 
