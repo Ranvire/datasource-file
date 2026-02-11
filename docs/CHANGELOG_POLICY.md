@@ -50,12 +50,16 @@ When documenting drift or modernization, be explicit about:
 
 ## Format (recommended)
 
+### Entry titles
+
+Use specific change titles for entry headings (e.g., `Node.js 22 LTS`, `Node:test`) rather than broad category labels like “Tooling” or “Runtime / Compatibility.”
+
 Use a simple, consistent structure in `CHANGELOG.md`:
 
-```
+```md
 ## Unreleased
 
-### Drift / Modernization
+### Change Title
 - Summary:
   - ...
 - Why:
@@ -65,6 +69,8 @@ Use a simple, consistent structure in `CHANGELOG.md`:
 - Migration/Action:
   - ...
 - References:
+  - ...
+- Timestamp: 
   - ...
 ```
 
