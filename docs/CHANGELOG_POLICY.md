@@ -69,3 +69,5 @@ Use a simple, consistent structure in `CHANGELOG.md`:
 ```
 
 If a category has no changes, omit it. Keep entries short and scannable.
+
+Ordering: insert the latest change immediately under `## Unreleased`, keeping entries in reverse chronological order (newest to oldest).
