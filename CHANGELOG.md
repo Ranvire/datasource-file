@@ -4,6 +4,21 @@ This changelog records user-visible, compatibility, and maintenance changes for 
 
 ## Unreleased
 
+### npm audit CI artifacts
+
+- Summary:
+  - Add an `npm audit` step to CI and upload the JSON report as an artifact.
+- Why:
+  - Record security scan results during CI runs.
+- Impact:
+  - CI only; may fail builds on high-severity vulnerabilities.
+- Migration/Action:
+  - None.
+- References:
+  - None.
+- Timestamp:
+  - 2026.02.11 11:37
+
 ### js-yaml 3.14.2
 
 - Summary:
