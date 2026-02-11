@@ -6,6 +6,7 @@ const yaml = require('js-yaml');
 
 const FileDataSource = require('./FileDataSource');
 const YamlDataSource = require('./YamlDataSource');
+const { requireDirectory } = require('./util/datasource-path');
 
 /**
  * Data source for areas stored in yml. Looks for a directory structure like:
@@ -57,9 +58,7 @@ class YamlAreaDataSource extends FileDataSource {
 
   async fetch(config = {}, id) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for YamlAreaDataSource`);
-    }
+    requireDirectory(dirPath, 'YamlAreaDataSource');
 
     const source = new YamlDataSource({}, dirPath);
 
@@ -68,9 +67,7 @@ class YamlAreaDataSource extends FileDataSource {
 
   async update(config = {}, id, data) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for YamlAreaDataSource`);
-    }
+    requireDirectory(dirPath, 'YamlAreaDataSource');
 
     const source = new YamlDataSource({}, dirPath);
 

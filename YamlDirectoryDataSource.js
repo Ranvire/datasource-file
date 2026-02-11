@@ -6,6 +6,7 @@ const yaml = require('js-yaml');
 
 const FileDataSource = require('./FileDataSource');
 const YamlDataSource = require('./YamlDataSource');
+const { requireDirectory } = require('./util/datasource-path');
 
 /**
  * Data source when you have a directory of yaml files and each entity is stored in
@@ -54,9 +55,7 @@ class YamlDirectoryDataSource extends FileDataSource {
 
   async fetch(config = {}, id) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for YamlDirectoryDataSource`);
-    }
+    requireDirectory(dirPath, 'YamlDirectoryDataSource');
 
     const source = new YamlDataSource({}, dirPath);
 
@@ -65,9 +64,7 @@ class YamlDirectoryDataSource extends FileDataSource {
 
   async update(config = {}, id, data) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for YamlDirectoryDataSource`);
-    }
+    requireDirectory(dirPath, 'YamlDirectoryDataSource');
 
     const source = new YamlDataSource({}, dirPath);
 

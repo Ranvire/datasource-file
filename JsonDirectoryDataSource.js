@@ -5,6 +5,7 @@ const path = require('path');
 
 const FileDataSource = require('./FileDataSource');
 const JsonDataSource = require('./JsonDataSource');
+const { requireDirectory } = require('./util/datasource-path');
 
 
 /**
@@ -55,9 +56,7 @@ class JsonDirectoryDataSource extends FileDataSource {
 
   fetch(config = {}, id) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for JsonDirectoryDataSource`);
-    }
+    requireDirectory(dirPath, 'JsonDirectoryDataSource');
 
     const source = new JsonDataSource({}, dirPath);
 
@@ -66,9 +65,7 @@ class JsonDirectoryDataSource extends FileDataSource {
 
   async update(config = {}, id, data) {
     const dirPath = this.resolvePath(config);
-    if (!fs.existsSync(dirPath)) {
-      throw new Error(`Invalid path [${dirPath}] specified for JsonDirectoryDataSource`);
-    }
+    requireDirectory(dirPath, 'JsonDirectoryDataSource');
     const source = new JsonDataSource({}, dirPath);
 
     return await source.replace({ path: `${id}.json` }, data);
